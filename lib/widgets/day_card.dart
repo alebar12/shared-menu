@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_menu/clients/api_client.dart';
-import 'package:shared_menu/constants/consts.dart';
 import 'package:shared_menu/dto/meal.dart';
+import 'package:shared_menu/l10n/app_localizations.dart';
 import 'package:shared_menu/services/storage_service.dart';
 
 class DayCard extends StatelessWidget {
@@ -25,6 +25,7 @@ class DayCard extends StatelessWidget {
 
   Future<void> _displayTextInputDialog(BuildContext context, String defaultValue, DateTime refDate,
       MealType mealType, VoidCallback onMealUpdated) async {
+    final l10n = AppLocalizations.of(context)!;
     return showDialog(
         context: context,
         builder: (context) {
@@ -47,13 +48,13 @@ class DayCard extends StatelessWidget {
             ),
             actions: <Widget>[
               MaterialButton(
-                child: const Text(Consts.labelCancel),
+                child: Text(l10n.labelCancel),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               MaterialButton(
-                child: const Text(Consts.labelOk),
+                child: Text(l10n.labelOk),
                 onPressed: () {
                   final navigator = Navigator.of(context);
                   StorageService().getMenuId().then((value) => {
@@ -81,12 +82,13 @@ class DayCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     Color? iconAndTextColor = theme.colorScheme.onPrimaryContainer;
     final textStyle = theme.textTheme.bodySmall!.copyWith(
       color: iconAndTextColor,
     );
 
-    var languageTag = "it_IT";
+    var languageTag = Localizations.localeOf(context).toString();
 
     final titleTextStyle = theme.textTheme.titleSmall!.copyWith(
       color: iconAndTextColor,
@@ -110,7 +112,7 @@ class DayCard extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 6,
-                  child: Text("${Consts.labelLunch}: ${(lunchMeal?.meal ?? '')}" , style: textStyle),
+                  child: Text("${l10n.labelLunch}: ${(lunchMeal?.meal ?? '')}" , style: textStyle),
                 ),
                 Expanded(
                   flex: 1,
@@ -129,7 +131,7 @@ class DayCard extends StatelessWidget {
               children: [
                 Expanded(
                     flex: 6,
-                    child: Text("${Consts.labelDinner}: ${(dinnerMeal?.meal ?? '')}" , style: textStyle)
+                    child: Text("${l10n.labelDinner}: ${(dinnerMeal?.meal ?? '')}" , style: textStyle)
                 ),
                 Expanded(
                   flex: 1,

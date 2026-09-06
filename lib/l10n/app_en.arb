@@ -1,0 +1,23 @@
+{
+  "@@locale": "en",
+  "appTitle": "Shared menu",
+  "@appTitle": {
+    "description": "The application title shown in the app bar and task switcher"
+  },
+  "labelOk": "Ok",
+  "@labelOk": {
+    "description": "Label for the confirm button in dialogs"
+  },
+  "labelCancel": "Cancel",
+  "@labelCancel": {
+    "description": "Label for the cancel button in dialogs"
+  },
+  "labelLunch": "Lunch",
+  "@labelLunch": {
+    "description": "Label for the lunch meal"
+  },
+  "labelDinner": "Dinner",
+  "@labelDinner": {
+    "description": "Label for the dinner meal"
+  }
+}
