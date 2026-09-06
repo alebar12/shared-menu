@@ -22,4 +22,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get labelDinner => 'Cena';
+
+  @override
+  String get labelRetry => 'Riprova';
+
+  @override
+  String get errorLoadingMeals => 'Impossibile caricare i menu';
+
+  @override
+  String get errorUpdateFailed => 'Impossibile salvare il pasto';
 }

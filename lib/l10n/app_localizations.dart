@@ -127,6 +127,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dinner'**
   String get labelDinner;
+
+  /// Label for the retry button shown when loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get labelRetry;
+
+  /// Error message shown when the meals cannot be loaded
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load meals'**
+  String get errorLoadingMeals;
+
+  /// Error message shown when saving a meal fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save meal'**
+  String get errorUpdateFailed;
 }
 
 class _AppLocalizationsDelegate

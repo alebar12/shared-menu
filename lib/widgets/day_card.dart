@@ -57,13 +57,19 @@ class DayCard extends StatelessWidget {
                 child: Text(l10n.labelOk),
                 onPressed: () {
                   final navigator = Navigator.of(context);
-                  StorageService().getMenuId().then((value) => {
-                    ApiClient().updateMeal(controller.text, refDate, mealType, value).whenComplete(() {
-                      navigator.pop();
-                      onMealUpdated();
-                    })
+                  final messenger = ScaffoldMessenger.of(context);
+                  StorageService()
+                      .getMenuId()
+                      .then((value) => ApiClient()
+                          .updateMeal(controller.text, refDate, mealType, value))
+                      .then((_) {
+                    navigator.pop();
+                    onMealUpdated();
+                  }).catchError((_) {
+                    messenger.showSnackBar(
+                      SnackBar(content: Text(l10n.errorUpdateFailed)),
+                    );
                   });
-
                 },
               ),
             ],

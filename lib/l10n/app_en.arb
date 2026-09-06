@@ -19,5 +19,17 @@
   "labelDinner": "Dinner",
   "@labelDinner": {
     "description": "Label for the dinner meal"
+  },
+  "labelRetry": "Retry",
+  "@labelRetry": {
+    "description": "Label for the retry button shown when loading fails"
+  },
+  "errorLoadingMeals": "Failed to load meals",
+  "@errorLoadingMeals": {
+    "description": "Error message shown when the meals cannot be loaded"
+  },
+  "errorUpdateFailed": "Failed to save meal",
+  "@errorUpdateFailed": {
+    "description": "Error message shown when saving a meal fails"
   }
 }

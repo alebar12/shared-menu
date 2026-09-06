@@ -37,7 +37,25 @@ class _DailyScrollViewState extends State<DailyScrollView> {
       body: FutureBuilder<List<Meal>>(
         future: mealData,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(AppLocalizations.of(context)!.errorLoadingMeals),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        mealData = ApiClient().fetchMeals();
+                      });
+                    },
+                    child: Text(AppLocalizations.of(context)!.labelRetry),
+                  ),
+                ],
+              ),
+            );
+          } else if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           } else {
             return RefreshIndicator(
