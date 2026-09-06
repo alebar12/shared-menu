@@ -58,7 +58,10 @@ class _DailyScrollViewState extends State<DailyScrollView> {
                           color: theme.colorScheme.primary
                       ),
                       child: FlexibleSpaceBar(
-                        title: Text(AppLocalizations.of(context)!.appTitle),
+                        title: Text(
+                          AppLocalizations.of(context)!.appTitle,
+                          style: const TextStyle(color: Colors.white),
+                        ),
                         background: Stack(
                           children: [
                             const Positioned.fill(
