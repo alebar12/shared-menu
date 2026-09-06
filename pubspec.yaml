@@ -14,9 +14,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   intl: ^0.20.2
   http: ^1.6.0
-  shared_preferences: ^2.0.20
   uuid: ^4.6.0
   flutter_launcher_icons: ^0.14.4
+  flutter_secure_storage: ^11.0.0
 
 flutter_launcher_icons:
   image_path: "images/launcher.png"
