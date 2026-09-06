@@ -12,11 +12,12 @@ class Meal {
   });
 
   factory Meal.fromJson(Map<String, dynamic> json) {
+    final mealType = (json['mealType'] as String?)?.toLowerCase();
     return Meal(
-      day: json['day'],
-      mealType: MealType.values.firstWhere((meal) => json['mealType'].toLowerCase() == meal.name.toLowerCase(),
+      day: json['day'] as String? ?? '',
+      mealType: MealType.values.firstWhere((meal) => mealType == meal.name.toLowerCase(),
           orElse: () => MealType.lunch),
-      meal: json['meal'],
+      meal: json['meal'] as String? ?? '',
     );
   }
 

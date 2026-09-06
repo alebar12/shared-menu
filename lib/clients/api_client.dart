@@ -26,11 +26,6 @@ class ApiClient {
     return compute(parseMeals, response.body);
   }
 
-  List<Meal> parseMeals(String responseBody) {
-    var jsonArray = jsonDecode(responseBody) as List;
-    return jsonArray.map((jsonObject) => Meal.fromJson(jsonObject)).toList();
-  }
-
   Future<http.Response> updateMeal(String meal, DateTime day, MealType mealType, String menuId) async {
     return await http.post(
       Uri.parse('https://shared-menu.alebar12.workers.dev/meals'),
@@ -45,4 +40,9 @@ class ApiClient {
       }),
     );
   }
+}
+
+List<Meal> parseMeals(String responseBody) {
+  var jsonArray = jsonDecode(responseBody) as List;
+  return jsonArray.map((jsonObject) => Meal.fromJson(jsonObject)).toList();
 }
