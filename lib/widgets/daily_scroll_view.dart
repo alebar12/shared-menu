@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:shared_menu/clients/altervista_client.dart';
+import 'package:shared_menu/clients/api_client.dart';
 import 'package:shared_menu/constants/consts.dart';
 import 'package:shared_menu/dto/meal.dart';
 import 'package:shared_menu/widgets/day_card.dart';
