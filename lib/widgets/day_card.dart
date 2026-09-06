@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:shared_menu/clients/api_client.dart';
 import 'package:shared_menu/dto/meal.dart';
 import 'package:shared_menu/l10n/app_localizations.dart';
-import 'package:shared_menu/services/storage_service.dart';
 
 class DayCard extends StatelessWidget {
   const DayCard({
@@ -56,10 +55,8 @@ class DayCard extends StatelessWidget {
                   onPressed: () {
                     final navigator = Navigator.of(context);
                     final messenger = ScaffoldMessenger.of(context);
-                    StorageService()
-                        .getMenuId()
-                        .then((value) => ApiClient()
-                            .updateMeal(controller.text, refDate, mealType, value))
+                    ApiClient()
+                        .updateMeal(controller.text, refDate, mealType)
                         .then((_) {
                       navigator.pop();
                       onMealUpdated();
