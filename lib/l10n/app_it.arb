@@ -4,5 +4,8 @@
   "labelOk": "Ok",
   "labelCancel": "Annulla",
   "labelLunch": "Pranzo",
-  "labelDinner": "Cena"
+  "labelDinner": "Cena",
+  "labelRetry": "Riprova",
+  "errorLoadingMeals": "Impossibile caricare i menu",
+  "errorUpdateFailed": "Impossibile salvare il pasto"
 }

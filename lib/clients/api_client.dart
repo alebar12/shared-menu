@@ -11,6 +11,9 @@ class ApiClient {
   Future<String> fetchMenuId() async {
     final response = await http
         .get(Uri.parse('https://shared-menu.alebar12.workers.dev/menuId'));
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, 'Failed to fetch menu id');
+    }
     return jsonDecode(response.body)['menuId'];
   }
 
@@ -22,12 +25,14 @@ class ApiClient {
           'x-menu-id': menuId,
         },
     );
-
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, 'Failed to fetch meals');
+    }
     return compute(parseMeals, response.body);
   }
 
   Future<http.Response> updateMeal(String meal, DateTime day, MealType mealType, String menuId) async {
-    return await http.post(
+    final response = await http.post(
       Uri.parse('https://shared-menu.alebar12.workers.dev/meals'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -39,7 +44,21 @@ class ApiClient {
         'day': DateFormat("yyyy-MM-dd").format(day)
       }),
     );
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException(response.statusCode, 'Failed to update meal');
+    }
+    return response;
   }
+}
+
+class ApiException implements Exception {
+  final int statusCode;
+  final String message;
+
+  ApiException(this.statusCode, this.message);
+
+  @override
+  String toString() => 'ApiException($statusCode): $message';
 }
 
 List<Meal> parseMeals(String responseBody) {
