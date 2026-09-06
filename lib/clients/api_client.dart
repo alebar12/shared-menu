@@ -7,7 +7,29 @@ import 'package:shared_menu/constants/consts.dart';
 import 'package:shared_menu/dto/meal.dart';
 import 'package:shared_menu/services/storage_service.dart';
 
-class ApiClient { 
+class ApiClient {
+  static Future<String>? _menuIdFuture;
+
+  Future<String> _resolveMenuId() async {
+    _menuIdFuture ??= _readOrCreateMenuId();
+    try {
+      return await _menuIdFuture!;
+    } catch (_) {
+      _menuIdFuture = null;
+      rethrow;
+    }
+  }
+
+  Future<String> _readOrCreateMenuId() async {
+    final storage = StorageService();
+    final existing = await storage.getMenuId();
+    if (existing != null) {
+      return existing;
+    }
+    final menuId = await fetchMenuId();
+    await storage.saveMenuId(menuId);
+    return menuId;
+  }
 
   Future<String> fetchMenuId() async {
     final response = await http
@@ -19,7 +41,7 @@ class ApiClient {
   }
 
   Future<List<Meal>> fetchMeals() async {
-    String menuId = await StorageService().getMenuId();
+    String menuId = await _resolveMenuId();
     final response = await http
         .get(Uri.parse('${Consts.apiBaseUrl}/meals'),
         headers: <String, String>{
@@ -32,7 +54,8 @@ class ApiClient {
     return compute(parseMeals, response.body);
   }
 
-  Future<http.Response> updateMeal(String meal, DateTime day, MealType mealType, String menuId) async {
+  Future<http.Response> updateMeal(String meal, DateTime day, MealType mealType) async {
+    final menuId = await _resolveMenuId();
     final response = await http.post(
       Uri.parse('${Consts.apiBaseUrl}/meals'),
       headers: <String, String>{
