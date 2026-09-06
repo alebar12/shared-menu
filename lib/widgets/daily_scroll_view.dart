@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_menu/clients/api_client.dart';
 import 'package:shared_menu/constants/consts.dart';
 import 'package:shared_menu/dto/meal.dart';
+import 'package:shared_menu/l10n/app_localizations.dart';
 import 'package:shared_menu/widgets/day_card.dart';
 
 class DailyScrollView extends StatefulWidget {
@@ -57,7 +58,7 @@ class _DailyScrollViewState extends State<DailyScrollView> {
                           color: theme.colorScheme.primary
                       ),
                       child: FlexibleSpaceBar(
-                        title: const Text(Consts.title),
+                        title: Text(AppLocalizations.of(context)!.appTitle),
                         background: Stack(
                           children: [
                             const Positioned.fill(
