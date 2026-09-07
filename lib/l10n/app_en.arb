@@ -43,5 +43,13 @@
   "menuActionShare": "Share my menu",
   "@menuActionShare": {
     "description": "Menu option that shares the current menu"
+  },
+  "createMenuConfirmMessage": "All current data will be lost. Do you want to continue?",
+  "@createMenuConfirmMessage": {
+    "description": "Confirmation message shown before creating a new menu"
+  },
+  "errorCreateMenuFailed": "Failed to create new menu",
+  "@errorCreateMenuFailed": {
+    "description": "Error message shown when creating a new menu fails"
   }
 }

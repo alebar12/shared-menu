@@ -163,6 +163,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share my menu'**
   String get menuActionShare;
+
+  /// Confirmation message shown before creating a new menu
+  ///
+  /// In en, this message translates to:
+  /// **'All current data will be lost. Do you want to continue?'**
+  String get createMenuConfirmMessage;
+
+  /// Error message shown when creating a new menu fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create new menu'**
+  String get errorCreateMenuFailed;
 }
 
 class _AppLocalizationsDelegate

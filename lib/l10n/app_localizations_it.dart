@@ -40,4 +40,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get menuActionShare => 'Condividi il mio menu';
+
+  @override
+  String get createMenuConfirmMessage =>
+      'Tutti i dati attuali andranno persi. Vuoi continuare?';
+
+  @override
+  String get errorCreateMenuFailed => 'Impossibile creare il nuovo menu';
 }

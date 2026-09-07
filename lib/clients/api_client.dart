@@ -31,6 +31,13 @@ class ApiClient {
     return menuId;
   }
 
+  Future<String> createNewMenu() async {
+    final menuId = await fetchMenuId();
+    await StorageService().saveMenuId(menuId);
+    _menuIdFuture = Future.value(menuId);
+    return menuId;
+  }
+
   Future<String> fetchMenuId() async {
     final response = await http
         .get(Uri.parse('${Consts.apiBaseUrl}/menuId'));
