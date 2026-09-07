@@ -59,5 +59,17 @@
   "errorLoadingMenuId": "Failed to load menu id",
   "@errorLoadingMenuId": {
     "description": "Error message shown when the menu id cannot be loaded"
+  },
+  "joinMenuConfirmMessage": "If you join another menu, all the current data will be lost. Do you want to continue?",
+  "@joinMenuConfirmMessage": {
+    "description": "Confirmation message shown before joining another menu"
+  },
+  "scanMenuInstruction": "Scan the QR code of the menu you want to join",
+  "@scanMenuInstruction": {
+    "description": "Instruction shown over the camera preview while scanning a menu QR code"
+  },
+  "errorJoinMenuFailed": "Failed to join the menu",
+  "@errorJoinMenuFailed": {
+    "description": "Error message shown when joining a menu fails or the scanned menu id is invalid"
   }
 }

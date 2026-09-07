@@ -54,4 +54,15 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get errorLoadingMenuId => 'Impossibile caricare l\'id del menu';
+
+  @override
+  String get joinMenuConfirmMessage =>
+      'Se ti unisci a un altro menu, tutti i dati attuali andranno persi. Vuoi continuare?';
+
+  @override
+  String get scanMenuInstruction =>
+      'Inquadra il codice QR del menu a cui vuoi unirti';
+
+  @override
+  String get errorJoinMenuFailed => 'Impossibile unirsi al menu';
 }

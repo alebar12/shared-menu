@@ -42,6 +42,23 @@ class ApiClient {
     return menuId;
   }
 
+  Future<void> joinMenu(String menuId) async {
+    final response = await http.post(
+      Uri.parse('${Consts.apiBaseUrl}/menuId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'menuId': menuId,
+      }),
+    );
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException(response.statusCode, 'Failed to validate menu id');
+    }
+    await StorageService().saveMenuId(menuId);
+    _menuIdFuture = Future.value(menuId);
+  }
+
   Future<String> fetchMenuId() async {
     final response = await http
         .get(Uri.parse('${Consts.apiBaseUrl}/menuId'));
