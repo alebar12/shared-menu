@@ -6,6 +6,8 @@ import 'package:shared_menu/dto/meal.dart';
 import 'package:shared_menu/l10n/app_localizations.dart';
 import 'package:shared_menu/widgets/day_card.dart';
 
+enum MenuAction { create, join, share }
+
 class DailyScrollView extends StatefulWidget {
   const DailyScrollView({
     super.key,
@@ -27,6 +29,17 @@ class _DailyScrollViewState extends State<DailyScrollView> {
       }
     }
     return null;
+  }
+
+  void _onMenuAction(MenuAction action) {
+    switch (action) {
+      case MenuAction.create:
+        break;
+      case MenuAction.join:
+        break;
+      case MenuAction.share:
+        break;
+    }
   }
 
   @override
@@ -71,6 +84,28 @@ class _DailyScrollViewState extends State<DailyScrollView> {
                     snap: false,
                     floating: false,
                     expandedHeight: 300.0,
+                    actions: [
+                      PopupMenuButton<MenuAction>(
+                        onSelected: _onMenuAction,
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            value: MenuAction.create,
+                            child: Text(
+                                AppLocalizations.of(context)!.menuActionCreate),
+                          ),
+                          PopupMenuItem(
+                            value: MenuAction.join,
+                            child: Text(
+                                AppLocalizations.of(context)!.menuActionJoin),
+                          ),
+                          PopupMenuItem(
+                            value: MenuAction.share,
+                            child: Text(
+                                AppLocalizations.of(context)!.menuActionShare),
+                          ),
+                        ],
+                      ),
+                    ],
                     flexibleSpace: Container(
                       decoration: BoxDecoration(
                           color: theme.colorScheme.primary

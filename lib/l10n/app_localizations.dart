@@ -145,6 +145,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to save meal'**
   String get errorUpdateFailed;
+
+  /// Menu option that creates a brand new menu
+  ///
+  /// In en, this message translates to:
+  /// **'Create new menu'**
+  String get menuActionCreate;
+
+  /// Menu option that joins an existing menu
+  ///
+  /// In en, this message translates to:
+  /// **'Join a menu'**
+  String get menuActionJoin;
+
+  /// Menu option that shares the current menu
+  ///
+  /// In en, this message translates to:
+  /// **'Share my menu'**
+  String get menuActionShare;
 }
 
 class _AppLocalizationsDelegate
