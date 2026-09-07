@@ -21,9 +21,11 @@ dependencies:
   flutter_secure_storage: ^11.0.0
 
 flutter_launcher_icons:
-  image_path: "images/launcher.png"
+  image_path: "images/icon.png"
   android: true
-  ios: true
+  ios: false
+  adaptive_icon_background: "#FF9800"
+  adaptive_icon_foreground: "images/icon.png"
 
 dev_dependencies:
   flutter_test:
