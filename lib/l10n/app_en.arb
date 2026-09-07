@@ -31,5 +31,17 @@
   "errorUpdateFailed": "Failed to save meal",
   "@errorUpdateFailed": {
     "description": "Error message shown when saving a meal fails"
+  },
+  "menuActionCreate": "Create new menu",
+  "@menuActionCreate": {
+    "description": "Menu option that creates a brand new menu"
+  },
+  "menuActionJoin": "Join a menu",
+  "@menuActionJoin": {
+    "description": "Menu option that joins an existing menu"
+  },
+  "menuActionShare": "Share my menu",
+  "@menuActionShare": {
+    "description": "Menu option that shares the current menu"
   }
 }

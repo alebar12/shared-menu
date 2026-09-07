@@ -31,4 +31,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get errorUpdateFailed => 'Impossibile salvare il pasto';
+
+  @override
+  String get menuActionCreate => 'Crea nuovo menu';
+
+  @override
+  String get menuActionJoin => 'Unisciti a un menu';
+
+  @override
+  String get menuActionShare => 'Condividi il mio menu';
 }

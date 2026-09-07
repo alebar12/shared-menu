@@ -31,4 +31,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorUpdateFailed => 'Failed to save meal';
+
+  @override
+  String get menuActionCreate => 'Create new menu';
+
+  @override
+  String get menuActionJoin => 'Join a menu';
+
+  @override
+  String get menuActionShare => 'Share my menu';
 }
