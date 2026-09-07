@@ -34,11 +34,52 @@ class _DailyScrollViewState extends State<DailyScrollView> {
   void _onMenuAction(MenuAction action) {
     switch (action) {
       case MenuAction.create:
+        _createNewMenu();
         break;
       case MenuAction.join:
         break;
       case MenuAction.share:
         break;
+    }
+  }
+
+  Future<void> _createNewMenu() async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(l10n.menuActionCreate),
+          content: Text(l10n.createMenuConfirmMessage),
+          actions: <Widget>[
+            MaterialButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.labelCancel),
+            ),
+            MaterialButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l10n.labelOk),
+            ),
+          ],
+        );
+      },
+    );
+    if (confirmed != true || !mounted) {
+      return;
+    }
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await ApiClient().createNewMenu();
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        mealData = ApiClient().fetchMeals();
+      });
+    } catch (_) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.errorCreateMenuFailed)),
+      );
     }
   }
 

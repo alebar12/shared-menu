@@ -40,4 +40,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get menuActionShare => 'Share my menu';
+
+  @override
+  String get createMenuConfirmMessage =>
+      'All current data will be lost. Do you want to continue?';
+
+  @override
+  String get errorCreateMenuFailed => 'Failed to create new menu';
 }

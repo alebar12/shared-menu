@@ -10,5 +10,7 @@
   "errorUpdateFailed": "Impossibile salvare il pasto",
   "menuActionCreate": "Crea nuovo menu",
   "menuActionJoin": "Unisciti a un menu",
-  "menuActionShare": "Condividi il mio menu"
+  "menuActionShare": "Condividi il mio menu",
+  "createMenuConfirmMessage": "Tutti i dati attuali andranno persi. Vuoi continuare?",
+  "errorCreateMenuFailed": "Impossibile creare il nuovo menu"
 }
