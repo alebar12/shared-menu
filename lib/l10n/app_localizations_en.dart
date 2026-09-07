@@ -47,4 +47,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorCreateMenuFailed => 'Failed to create new menu';
+
+  @override
+  String get shareMenuInstruction => 'Scan this QR code to join the menu';
+
+  @override
+  String get errorLoadingMenuId => 'Failed to load menu id';
 }

@@ -51,5 +51,13 @@
   "errorCreateMenuFailed": "Failed to create new menu",
   "@errorCreateMenuFailed": {
     "description": "Error message shown when creating a new menu fails"
+  },
+  "shareMenuInstruction": "Scan this QR code to join the menu",
+  "@shareMenuInstruction": {
+    "description": "Instruction shown above the QR code on the share menu screen"
+  },
+  "errorLoadingMenuId": "Failed to load menu id",
+  "@errorLoadingMenuId": {
+    "description": "Error message shown when the menu id cannot be loaded"
   }
 }

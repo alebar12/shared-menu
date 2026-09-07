@@ -31,6 +31,10 @@ class ApiClient {
     return menuId;
   }
 
+  Future<String> currentMenuId() {
+    return _resolveMenuId();
+  }
+
   Future<String> createNewMenu() async {
     final menuId = await fetchMenuId();
     await StorageService().saveMenuId(menuId);
