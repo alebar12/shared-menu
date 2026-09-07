@@ -187,6 +187,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to load menu id'**
   String get errorLoadingMenuId;
+
+  /// Confirmation message shown before joining another menu
+  ///
+  /// In en, this message translates to:
+  /// **'If you join another menu, all the current data will be lost. Do you want to continue?'**
+  String get joinMenuConfirmMessage;
+
+  /// Instruction shown over the camera preview while scanning a menu QR code
+  ///
+  /// In en, this message translates to:
+  /// **'Scan the QR code of the menu you want to join'**
+  String get scanMenuInstruction;
+
+  /// Error message shown when joining a menu fails or the scanned menu id is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to join the menu'**
+  String get errorJoinMenuFailed;
 }
 
 class _AppLocalizationsDelegate

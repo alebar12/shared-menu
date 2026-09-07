@@ -5,6 +5,7 @@ import 'package:shared_menu/constants/consts.dart';
 import 'package:shared_menu/dto/meal.dart';
 import 'package:shared_menu/l10n/app_localizations.dart';
 import 'package:shared_menu/widgets/day_card.dart';
+import 'package:shared_menu/widgets/scan_menu_view.dart';
 import 'package:shared_menu/widgets/share_menu_view.dart';
 
 enum MenuAction { create, join, share }
@@ -38,6 +39,7 @@ class _DailyScrollViewState extends State<DailyScrollView> {
         _createNewMenu();
         break;
       case MenuAction.join:
+        _joinMenu();
         break;
       case MenuAction.share:
         _shareMenu();
@@ -50,6 +52,53 @@ class _DailyScrollViewState extends State<DailyScrollView> {
       context,
       MaterialPageRoute(builder: (context) => const ShareMenuView()),
     );
+  }
+
+  Future<void> _joinMenu() async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(l10n.menuActionJoin),
+          content: Text(l10n.joinMenuConfirmMessage),
+          actions: <Widget>[
+            MaterialButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.labelCancel),
+            ),
+            MaterialButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l10n.labelOk),
+            ),
+          ],
+        );
+      },
+    );
+    if (confirmed != true || !mounted) {
+      return;
+    }
+    final scannedMenuId = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(builder: (context) => const ScanMenuView()),
+    );
+    if (scannedMenuId == null || !mounted) {
+      return;
+    }
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await ApiClient().joinMenu(scannedMenuId);
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        mealData = ApiClient().fetchMeals();
+      });
+    } catch (_) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.errorJoinMenuFailed)),
+      );
+    }
   }
 
   Future<void> _createNewMenu() async {
@@ -136,6 +185,7 @@ class _DailyScrollViewState extends State<DailyScrollView> {
                     expandedHeight: 300.0,
                     actions: [
                       PopupMenuButton<MenuAction>(
+                        icon: const Icon(Icons.more_vert, color: Colors.white),
                         onSelected: _onMenuAction,
                         itemBuilder: (context) => [
                           PopupMenuItem(

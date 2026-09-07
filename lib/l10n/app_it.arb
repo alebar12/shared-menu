@@ -14,5 +14,8 @@
   "createMenuConfirmMessage": "Tutti i dati attuali andranno persi. Vuoi continuare?",
   "errorCreateMenuFailed": "Impossibile creare il nuovo menu",
   "shareMenuInstruction": "Inquadra questo codice QR per unirti al menu",
-  "errorLoadingMenuId": "Impossibile caricare l'id del menu"
+  "errorLoadingMenuId": "Impossibile caricare l'id del menu",
+  "joinMenuConfirmMessage": "Se ti unisci a un altro menu, tutti i dati attuali andranno persi. Vuoi continuare?",
+  "scanMenuInstruction": "Inquadra il codice QR del menu a cui vuoi unirti",
+  "errorJoinMenuFailed": "Impossibile unirsi al menu"
 }

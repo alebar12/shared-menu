@@ -20,12 +20,13 @@ dependencies:
   flutter_launcher_icons: ^0.14.4
   flutter_secure_storage: ^11.0.0
   qr_flutter: ^4.1.0
+  mobile_scanner: ^7.4.0
 
 flutter_launcher_icons:
   image_path: "images/icon.png"
   android: true
   ios: false
-  adaptive_icon_background: "#FF9800"
+  adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: "images/icon.png"
 
 dev_dependencies:
