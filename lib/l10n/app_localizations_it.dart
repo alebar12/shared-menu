@@ -47,4 +47,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get errorCreateMenuFailed => 'Impossibile creare il nuovo menu';
+
+  @override
+  String get shareMenuInstruction =>
+      'Inquadra questo codice QR per unirti al menu';
+
+  @override
+  String get errorLoadingMenuId => 'Impossibile caricare l\'id del menu';
 }

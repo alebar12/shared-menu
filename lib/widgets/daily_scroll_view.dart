@@ -5,6 +5,7 @@ import 'package:shared_menu/constants/consts.dart';
 import 'package:shared_menu/dto/meal.dart';
 import 'package:shared_menu/l10n/app_localizations.dart';
 import 'package:shared_menu/widgets/day_card.dart';
+import 'package:shared_menu/widgets/share_menu_view.dart';
 
 enum MenuAction { create, join, share }
 
@@ -39,8 +40,16 @@ class _DailyScrollViewState extends State<DailyScrollView> {
       case MenuAction.join:
         break;
       case MenuAction.share:
+        _shareMenu();
         break;
     }
+  }
+
+  void _shareMenu() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ShareMenuView()),
+    );
   }
 
   Future<void> _createNewMenu() async {

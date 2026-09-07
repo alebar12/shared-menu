@@ -12,5 +12,7 @@
   "menuActionJoin": "Unisciti a un menu",
   "menuActionShare": "Condividi il mio menu",
   "createMenuConfirmMessage": "Tutti i dati attuali andranno persi. Vuoi continuare?",
-  "errorCreateMenuFailed": "Impossibile creare il nuovo menu"
+  "errorCreateMenuFailed": "Impossibile creare il nuovo menu",
+  "shareMenuInstruction": "Inquadra questo codice QR per unirti al menu",
+  "errorLoadingMenuId": "Impossibile caricare l'id del menu"
 }

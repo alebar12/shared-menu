@@ -175,6 +175,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to create new menu'**
   String get errorCreateMenuFailed;
+
+  /// Instruction shown above the QR code on the share menu screen
+  ///
+  /// In en, this message translates to:
+  /// **'Scan this QR code to join the menu'**
+  String get shareMenuInstruction;
+
+  /// Error message shown when the menu id cannot be loaded
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load menu id'**
+  String get errorLoadingMenuId;
 }
 
 class _AppLocalizationsDelegate

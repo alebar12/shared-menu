@@ -19,6 +19,7 @@ dependencies:
   uuid: ^4.6.0
   flutter_launcher_icons: ^0.14.4
   flutter_secure_storage: ^11.0.0
+  qr_flutter: ^4.1.0
 
 flutter_launcher_icons:
   image_path: "images/icon.png"
