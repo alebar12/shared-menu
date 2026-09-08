@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_menu/clients/api_client.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_menu/dto/meal.dart';
 import 'package:shared_menu/l10n/app_localizations.dart';
+import 'package:shared_menu/services/meal_service.dart';
 
 class DayCard extends StatelessWidget {
   const DayCard({
@@ -25,6 +26,7 @@ class DayCard extends StatelessWidget {
   Future<void> _displayTextInputDialog(BuildContext context, String defaultValue, DateTime refDate,
       MealType mealType, VoidCallback onMealUpdated) async {
     final l10n = AppLocalizations.of(context)!;
+    final mealService = context.read<MealService>();
     final controller = TextEditingController(text: defaultValue);
     try {
       await showDialog(
@@ -55,7 +57,7 @@ class DayCard extends StatelessWidget {
                   onPressed: () {
                     final navigator = Navigator.of(context);
                     final messenger = ScaffoldMessenger.of(context);
-                    ApiClient()
+                    mealService
                         .updateMeal(controller.text, refDate, mealType)
                         .then((_) {
                       navigator.pop();

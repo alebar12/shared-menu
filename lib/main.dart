@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_menu/clients/api_client.dart';
 import 'package:shared_menu/l10n/app_localizations.dart';
+import 'package:shared_menu/services/meal_service.dart';
+import 'package:shared_menu/services/menu_service.dart';
+import 'package:shared_menu/services/storage_service.dart';
 import 'package:shared_menu/widgets/daily_scroll_view.dart';
 
 
@@ -17,8 +21,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => MyAppState()),
+        Provider(create: (context) => ApiClient()),
+        Provider(create: (context) => StorageService()),
+        Provider(
+          create: (context) => MenuService(
+            apiClient: context.read<ApiClient>(),
+            storageService: context.read<StorageService>(),
+          ),
+        ),
+        Provider(
+          create: (context) => MealService(
+            apiClient: context.read<ApiClient>(),
+            menuService: context.read<MenuService>(),
+          ),
+        ),
+      ],
       child: MaterialApp(
         onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
         localizationsDelegates: AppLocalizations.localizationsDelegates,

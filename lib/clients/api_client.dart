@@ -5,44 +5,18 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_menu/constants/consts.dart';
 import 'package:shared_menu/dto/meal.dart';
-import 'package:shared_menu/services/storage_service.dart';
 
 class ApiClient {
-  static Future<String>? _menuIdFuture;
-
-  Future<String> _resolveMenuId() async {
-    _menuIdFuture ??= _readOrCreateMenuId();
-    try {
-      return await _menuIdFuture!;
-    } catch (_) {
-      _menuIdFuture = null;
-      rethrow;
+  Future<String> fetchMenuId() async {
+    final response = await http
+        .get(Uri.parse('${Consts.apiBaseUrl}/menuId'));
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, 'Failed to fetch menu id');
     }
+    return jsonDecode(response.body)['menuId'];
   }
 
-  Future<String> _readOrCreateMenuId() async {
-    final storage = StorageService();
-    final existing = await storage.getMenuId();
-    if (existing != null) {
-      return existing;
-    }
-    final menuId = await fetchMenuId();
-    await storage.saveMenuId(menuId);
-    return menuId;
-  }
-
-  Future<String> currentMenuId() {
-    return _resolveMenuId();
-  }
-
-  Future<String> createNewMenu() async {
-    final menuId = await fetchMenuId();
-    await StorageService().saveMenuId(menuId);
-    _menuIdFuture = Future.value(menuId);
-    return menuId;
-  }
-
-  Future<void> joinMenu(String menuId) async {
+  Future<void> validateMenuId(String menuId) async {
     final response = await http.post(
       Uri.parse('${Consts.apiBaseUrl}/menuId'),
       headers: <String, String>{
@@ -55,21 +29,9 @@ class ApiClient {
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw ApiException(response.statusCode, 'Failed to validate menu id');
     }
-    await StorageService().saveMenuId(menuId);
-    _menuIdFuture = Future.value(menuId);
   }
 
-  Future<String> fetchMenuId() async {
-    final response = await http
-        .get(Uri.parse('${Consts.apiBaseUrl}/menuId'));
-    if (response.statusCode != 200) {
-      throw ApiException(response.statusCode, 'Failed to fetch menu id');
-    }
-    return jsonDecode(response.body)['menuId'];
-  }
-
-  Future<List<Meal>> fetchMeals() async {
-    String menuId = await _resolveMenuId();
+  Future<List<Meal>> fetchMeals(String menuId) async {
     final response = await http
         .get(Uri.parse('${Consts.apiBaseUrl}/meals'),
         headers: <String, String>{
@@ -82,8 +44,7 @@ class ApiClient {
     return compute(parseMeals, response.body);
   }
 
-  Future<http.Response> updateMeal(String meal, DateTime day, MealType mealType) async {
-    final menuId = await _resolveMenuId();
+  Future<void> postMeal(String menuId, String meal, DateTime day, MealType mealType) async {
     final response = await http.post(
       Uri.parse('${Consts.apiBaseUrl}/meals'),
       headers: <String, String>{
@@ -99,7 +60,6 @@ class ApiClient {
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw ApiException(response.statusCode, 'Failed to update meal');
     }
-    return response;
   }
 }
 
