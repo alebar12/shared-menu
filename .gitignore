@@ -47,3 +47,5 @@ app.*.map.json
 
 # Local configuration files
 /android/local.properties
+
+/coverage/

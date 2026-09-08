@@ -23,8 +23,12 @@ class DayCard extends StatelessWidget {
     return DateFormat("EEEE dd MMMM", languageTag).format(date);
   }
 
-  Future<void> _displayTextInputDialog(BuildContext context, String defaultValue, DateTime refDate,
-      MealType mealType, VoidCallback onMealUpdated) async {
+  Future<void> _displayTextInputDialog(
+      BuildContext context,
+      String defaultValue,
+      DateTime refDate,
+      MealType mealType,
+      VoidCallback onMealUpdated) async {
     final l10n = AppLocalizations.of(context);
     final mealService = context.read<MealService>();
     var value = defaultValue;
@@ -56,9 +60,7 @@ class DayCard extends StatelessWidget {
                 onPressed: () {
                   final navigator = Navigator.of(context);
                   final messenger = ScaffoldMessenger.of(context);
-                  mealService
-                      .updateMeal(value, refDate, mealType)
-                      .then((_) {
+                  mealService.updateMeal(value, refDate, mealType).then((_) {
                     navigator.pop();
                     onMealUpdated();
                   }).catchError((_) {
@@ -96,7 +98,6 @@ class DayCard extends StatelessWidget {
       color: iconAndTextColor,
     );
 
-
     return Card(
       color: _getCartColor(theme),
       child: Padding(
@@ -114,17 +115,22 @@ class DayCard extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 6,
-                  child: Text("${l10n.labelLunch}: ${(lunchMeal?.meal ?? '')}" , style: textStyle),
+                  child: Text("${l10n.labelLunch}: ${(lunchMeal?.meal ?? '')}",
+                      style: textStyle),
                 ),
                 Expanded(
                   flex: 1,
                   child: IconButton(
-                    onPressed: () {
-                      _displayTextInputDialog(context, (lunchMeal?.meal ?? ''), date, MealType.lunch, onMealUpdated);
-                    },
-                    color: iconAndTextColor,
-                    icon: const Icon(Icons.edit)
-                  ),
+                      onPressed: () {
+                        _displayTextInputDialog(
+                            context,
+                            (lunchMeal?.meal ?? ''),
+                            date,
+                            MealType.lunch,
+                            onMealUpdated);
+                      },
+                      color: iconAndTextColor,
+                      icon: const Icon(Icons.edit)),
                 )
               ],
             ),
@@ -133,13 +139,19 @@ class DayCard extends StatelessWidget {
               children: [
                 Expanded(
                     flex: 6,
-                    child: Text("${l10n.labelDinner}: ${(dinnerMeal?.meal ?? '')}" , style: textStyle)
-                ),
+                    child: Text(
+                        "${l10n.labelDinner}: ${(dinnerMeal?.meal ?? '')}",
+                        style: textStyle)),
                 Expanded(
                   flex: 1,
                   child: IconButton(
                       onPressed: () {
-                        _displayTextInputDialog(context, (dinnerMeal?.meal ?? ''), date, MealType.dinner, onMealUpdated);
+                        _displayTextInputDialog(
+                            context,
+                            (dinnerMeal?.meal ?? ''),
+                            date,
+                            MealType.dinner,
+                            onMealUpdated);
                       },
                       color: iconAndTextColor,
                       icon: const Icon(Icons.edit)),

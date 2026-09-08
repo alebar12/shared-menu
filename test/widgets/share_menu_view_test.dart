@@ -25,7 +25,8 @@ void main() {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Provider<MenuService>.value(
-          value: MenuService(apiClient: apiClient, storageService: storageService),
+          value:
+              MenuService(apiClient: apiClient, storageService: storageService),
           child: const ShareMenuView(),
         ),
       ),

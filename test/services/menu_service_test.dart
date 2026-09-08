@@ -12,7 +12,8 @@ void main() {
   setUp(() {
     apiClient = FakeApiClient();
     storageService = FakeStorageService();
-    menuService = MenuService(apiClient: apiClient, storageService: storageService);
+    menuService =
+        MenuService(apiClient: apiClient, storageService: storageService);
   });
 
   group('currentMenuId', () {
@@ -50,7 +51,8 @@ void main() {
 
     test('clears the cache after a failure so the next call retries', () async {
       apiClient.fetchMenuIdError = ApiException(500, 'boom');
-      await expectLater(menuService.currentMenuId(), throwsA(isA<ApiException>()));
+      await expectLater(
+          menuService.currentMenuId(), throwsA(isA<ApiException>()));
 
       apiClient.fetchMenuIdError = null;
       apiClient.menuIdToReturn = 'recovered-menu';
@@ -83,7 +85,8 @@ void main() {
     test('does not store the menu id when the api fails', () async {
       apiClient.fetchMenuIdError = ApiException(500, 'boom');
 
-      await expectLater(menuService.createNewMenu(), throwsA(isA<ApiException>()));
+      await expectLater(
+          menuService.createNewMenu(), throwsA(isA<ApiException>()));
       expect(storageService.savedMenuIds, isEmpty);
     });
   });

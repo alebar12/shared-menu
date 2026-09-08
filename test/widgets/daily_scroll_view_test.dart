@@ -62,7 +62,8 @@ void main() {
   Meal mealForToday(MealType mealType, String meal) =>
       mealForDay(0, mealType, meal);
 
-  testWidgets('shows a progress indicator while the meals load', (tester) async {
+  testWidgets('shows a progress indicator while the meals load',
+      (tester) async {
     await pumpDailyScrollView(tester);
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -116,7 +117,8 @@ void main() {
     final gate = Completer<void>();
     apiClient.fetchMealsGate = gate;
 
-    await tester.fling(find.byType(CustomScrollView), const Offset(0, 300), 1000);
+    await tester.fling(
+        find.byType(CustomScrollView), const Offset(0, 300), 1000);
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
 
@@ -192,7 +194,8 @@ void main() {
     expect(apiClient.fetchMealsMenuIds, <String>['menu-1']);
   });
 
-  testWidgets('cancelling the create confirmation does nothing', (tester) async {
+  testWidgets('cancelling the create confirmation does nothing',
+      (tester) async {
     await pumpDailyScrollView(tester);
     await tester.pumpAndSettle();
 

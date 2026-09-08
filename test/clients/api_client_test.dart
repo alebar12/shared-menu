@@ -49,7 +49,8 @@ void main() {
 
       expect(captured.method, 'POST');
       expect(captured.url, Uri.parse('${Consts.apiBaseUrl}/menuId'));
-      expect(captured.headers['Content-Type'], 'application/json; charset=UTF-8');
+      expect(
+          captured.headers['Content-Type'], 'application/json; charset=UTF-8');
       expect(jsonDecode(captured.body), <String, String>{'menuId': 'menu-1'});
     });
 
@@ -110,7 +111,8 @@ void main() {
         }),
       );
 
-      await client.postMeal('menu-1', 'Pizza', DateTime(2024, 1, 5), MealType.dinner);
+      await client.postMeal(
+          'menu-1', 'Pizza', DateTime(2024, 1, 5), MealType.dinner);
 
       expect(captured.method, 'POST');
       expect(captured.url, Uri.parse('${Consts.apiBaseUrl}/meals'));
@@ -128,7 +130,8 @@ void main() {
       );
 
       await expectLater(
-        client.postMeal('menu-1', 'Pizza', DateTime(2024, 1, 5), MealType.lunch),
+        client.postMeal(
+            'menu-1', 'Pizza', DateTime(2024, 1, 5), MealType.lunch),
         throwsA(isA<ApiException>()
             .having((e) => e.message, 'message', 'Failed to update meal')),
       );

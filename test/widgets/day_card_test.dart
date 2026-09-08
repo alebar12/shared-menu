@@ -73,8 +73,10 @@ void main() {
     await pumpDayCard(
       tester,
       date: DateTime(2024, 1, 15),
-      lunchMeal: Meal(day: '2024-1-15', mealType: MealType.lunch, meal: 'Pasta'),
-      dinnerMeal: Meal(day: '2024-1-15', mealType: MealType.dinner, meal: 'Pizza'),
+      lunchMeal:
+          Meal(day: '2024-1-15', mealType: MealType.lunch, meal: 'Pasta'),
+      dinnerMeal:
+          Meal(day: '2024-1-15', mealType: MealType.dinner, meal: 'Pizza'),
     );
 
     expect(find.text('Monday 15 January'), findsOneWidget);
@@ -110,7 +112,8 @@ void main() {
     await pumpDayCard(
       tester,
       date: DateTime(2024, 1, 15),
-      lunchMeal: Meal(day: '2024-1-15', mealType: MealType.lunch, meal: 'Pasta'),
+      lunchMeal:
+          Meal(day: '2024-1-15', mealType: MealType.lunch, meal: 'Pasta'),
     );
 
     await tester.tap(find.byIcon(Icons.edit).first);
@@ -124,7 +127,8 @@ void main() {
     await pumpDayCard(
       tester,
       date: DateTime(2024, 1, 15),
-      dinnerMeal: Meal(day: '2024-1-15', mealType: MealType.dinner, meal: 'Pizza'),
+      dinnerMeal:
+          Meal(day: '2024-1-15', mealType: MealType.dinner, meal: 'Pizza'),
       onMealUpdated: () => notified++,
     );
 

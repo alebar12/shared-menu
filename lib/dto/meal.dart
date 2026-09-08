@@ -15,18 +15,16 @@ class Meal {
     final mealType = (json['mealType'] as String?)?.toLowerCase();
     return Meal(
       day: json['day'] as String? ?? '',
-      mealType: MealType.values.firstWhere((meal) => mealType == meal.name.toLowerCase(),
+      mealType: MealType.values.firstWhere(
+          (meal) => mealType == meal.name.toLowerCase(),
           orElse: () => MealType.lunch),
       meal: json['meal'] as String? ?? '',
     );
   }
 
-  DateTime parseDay(){
+  DateTime parseDay() {
     return DateFormat("y-M-d").parse(day);
   }
 }
 
-enum MealType {
-  lunch,
-  dinner
-}
+enum MealType { lunch, dinner }

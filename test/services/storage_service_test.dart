@@ -21,13 +21,15 @@ void main() {
   });
 
   test('reads the menu id written by another instance', () async {
-    FlutterSecureStorage.setMockInitialValues(<String, String>{'menu-id': 'menu-1'});
+    FlutterSecureStorage.setMockInitialValues(
+        <String, String>{'menu-id': 'menu-1'});
 
     expect(await StorageService().getMenuId(), 'menu-1');
   });
 
   test('overwrites the stored menu id', () async {
-    FlutterSecureStorage.setMockInitialValues(<String, String>{'menu-id': 'menu-1'});
+    FlutterSecureStorage.setMockInitialValues(
+        <String, String>{'menu-id': 'menu-1'});
     final storageService = StorageService();
 
     await storageService.saveMenuId('menu-2');
