@@ -1,9 +1,11 @@
 
 import 'package:flutter/material.dart';
-import 'package:shared_menu/clients/api_client.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_menu/constants/consts.dart';
 import 'package:shared_menu/dto/meal.dart';
 import 'package:shared_menu/l10n/app_localizations.dart';
+import 'package:shared_menu/services/meal_service.dart';
+import 'package:shared_menu/services/menu_service.dart';
 import 'package:shared_menu/widgets/day_card.dart';
 import 'package:shared_menu/widgets/scan_menu_view.dart';
 import 'package:shared_menu/widgets/share_menu_view.dart';
@@ -20,9 +22,19 @@ class DailyScrollView extends StatefulWidget {
 }
 
 class _DailyScrollViewState extends State<DailyScrollView> {
-  Future<List<Meal>> mealData = ApiClient().fetchMeals();
+  late final MealService _mealService;
+  late final MenuService _menuService;
+  late Future<List<Meal>> mealData;
   List<DateTime> dates = List.generate(Consts.days, (index) =>
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + index));
+
+  @override
+  void initState() {
+    super.initState();
+    _mealService = context.read<MealService>();
+    _menuService = context.read<MenuService>();
+    mealData = _mealService.fetchMeals();
+  }
 
   Meal? extractMealForDay (List<Meal>? meals,  DateTime day, MealType mealType) {
     for (Meal meal in meals!) {
@@ -87,12 +99,12 @@ class _DailyScrollViewState extends State<DailyScrollView> {
     }
     final messenger = ScaffoldMessenger.of(context);
     try {
-      await ApiClient().joinMenu(scannedMenuId);
+      await _menuService.joinMenu(scannedMenuId);
       if (!mounted) {
         return;
       }
       setState(() {
-        mealData = ApiClient().fetchMeals();
+        mealData = _mealService.fetchMeals();
       });
     } catch (_) {
       messenger.showSnackBar(
@@ -127,12 +139,12 @@ class _DailyScrollViewState extends State<DailyScrollView> {
     }
     final messenger = ScaffoldMessenger.of(context);
     try {
-      await ApiClient().createNewMenu();
+      await _menuService.createNewMenu();
       if (!mounted) {
         return;
       }
       setState(() {
-        mealData = ApiClient().fetchMeals();
+        mealData = _mealService.fetchMeals();
       });
     } catch (_) {
       messenger.showSnackBar(
@@ -159,7 +171,7 @@ class _DailyScrollViewState extends State<DailyScrollView> {
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        mealData = ApiClient().fetchMeals();
+                        mealData = _mealService.fetchMeals();
                       });
                     },
                     child: Text(AppLocalizations.of(context)!.labelRetry),
@@ -173,7 +185,7 @@ class _DailyScrollViewState extends State<DailyScrollView> {
             return RefreshIndicator(
               onRefresh: () async {
                 setState(() {
-                  mealData = ApiClient().fetchMeals();
+                  mealData = _mealService.fetchMeals();
                 });
               },
               child: CustomScrollView(
@@ -257,7 +269,7 @@ class _DailyScrollViewState extends State<DailyScrollView> {
                               dinnerMeal: extractMealForDay(snapshot.data, dates[index], MealType.dinner),
                               onMealUpdated: () {
                                 setState(() {
-                                  mealData = ApiClient().fetchMeals();
+                                  mealData = _mealService.fetchMeals();
                                 });
                               },
                             ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:shared_menu/clients/api_client.dart';
 import 'package:shared_menu/l10n/app_localizations.dart';
+import 'package:shared_menu/services/menu_service.dart';
 
 class ShareMenuView extends StatefulWidget {
   const ShareMenuView({
@@ -13,7 +14,15 @@ class ShareMenuView extends StatefulWidget {
 }
 
 class _ShareMenuViewState extends State<ShareMenuView> {
-  Future<String> menuId = ApiClient().currentMenuId();
+  late final MenuService _menuService;
+  late Future<String> menuId;
+
+  @override
+  void initState() {
+    super.initState();
+    _menuService = context.read<MenuService>();
+    menuId = _menuService.currentMenuId();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +46,7 @@ class _ShareMenuViewState extends State<ShareMenuView> {
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        menuId = ApiClient().currentMenuId();
+                        menuId = _menuService.currentMenuId();
                       });
                     },
                     child: Text(l10n.labelRetry),
