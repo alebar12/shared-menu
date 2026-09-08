@@ -21,28 +21,62 @@ class DailyScrollView extends StatefulWidget {
   State<DailyScrollView> createState() => _DailyScrollViewState();
 }
 
-class _DailyScrollViewState extends State<DailyScrollView> {
+class _DailyScrollViewState extends State<DailyScrollView>
+    with WidgetsBindingObserver {
   late final MealService _mealService;
   late final MenuService _menuService;
   late Future<List<Meal>> mealData;
-  List<DateTime> dates = List.generate(Consts.days, (index) =>
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + index));
+  late List<DateTime> dates;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _mealService = context.read<MealService>();
     _menuService = context.read<MenuService>();
+    dates = _generateDates();
     mealData = _mealService.fetchMeals();
   }
 
-  Meal? extractMealForDay (List<Meal>? meals,  DateTime day, MealType mealType) {
-    for (Meal meal in meals!) {
-      if (meal.mealType == mealType && meal.parseDay() == day) {
-        return meal;
-      }
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) {
+      return;
     }
-    return null;
+    final refreshedDates = _generateDates();
+    if (refreshedDates.first == dates.first) {
+      return;
+    }
+    setState(() {
+      dates = refreshedDates;
+      mealData = _mealService.fetchMeals();
+    });
+  }
+
+  List<DateTime> _generateDates() {
+    final now = DateTime.now();
+    return List<DateTime>.generate(Consts.days,
+        (index) => DateTime(now.year, now.month, now.day + index));
+  }
+
+  Map<(DateTime, MealType), Meal> _indexMealsByDay(List<Meal> meals) {
+    final index = <(DateTime, MealType), Meal>{};
+    for (final Meal meal in meals) {
+      index.putIfAbsent((meal.parseDay(), meal.mealType), () => meal);
+    }
+    return index;
+  }
+
+  void _reloadMeals() {
+    setState(() {
+      mealData = _mealService.fetchMeals();
+    });
   }
 
   void _onMenuAction(MenuAction action) {
@@ -67,7 +101,7 @@ class _DailyScrollViewState extends State<DailyScrollView> {
   }
 
   Future<void> _joinMenu() async {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) {
@@ -103,9 +137,7 @@ class _DailyScrollViewState extends State<DailyScrollView> {
       if (!mounted) {
         return;
       }
-      setState(() {
-        mealData = _mealService.fetchMeals();
-      });
+      _reloadMeals();
     } catch (_) {
       messenger.showSnackBar(
         SnackBar(content: Text(l10n.errorJoinMenuFailed)),
@@ -114,7 +146,7 @@ class _DailyScrollViewState extends State<DailyScrollView> {
   }
 
   Future<void> _createNewMenu() async {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) {
@@ -143,9 +175,7 @@ class _DailyScrollViewState extends State<DailyScrollView> {
       if (!mounted) {
         return;
       }
-      setState(() {
-        mealData = _mealService.fetchMeals();
-      });
+      _reloadMeals();
     } catch (_) {
       messenger.showSnackBar(
         SnackBar(content: Text(l10n.errorCreateMenuFailed)),
@@ -156,6 +186,7 @@ class _DailyScrollViewState extends State<DailyScrollView> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       body: FutureBuilder<List<Meal>>(
@@ -166,15 +197,11 @@ class _DailyScrollViewState extends State<DailyScrollView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(AppLocalizations.of(context)!.errorLoadingMeals),
+                  Text(l10n.errorLoadingMeals),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        mealData = _mealService.fetchMeals();
-                      });
-                    },
-                    child: Text(AppLocalizations.of(context)!.labelRetry),
+                    onPressed: _reloadMeals,
+                    child: Text(l10n.labelRetry),
                   ),
                 ],
               ),
@@ -182,11 +209,18 @@ class _DailyScrollViewState extends State<DailyScrollView> {
           } else if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           } else {
+            final mealsByDay = _indexMealsByDay(snapshot.data!);
             return RefreshIndicator(
               onRefresh: () async {
+                final refreshed = _mealService.fetchMeals();
                 setState(() {
-                  mealData = _mealService.fetchMeals();
+                  mealData = refreshed;
                 });
+                try {
+                  await refreshed;
+                } catch (_) {
+                  // Surfaced by the FutureBuilder on the next build.
+                }
               },
               child: CustomScrollView(
                 slivers: <Widget>[
@@ -202,18 +236,15 @@ class _DailyScrollViewState extends State<DailyScrollView> {
                         itemBuilder: (context) => [
                           PopupMenuItem(
                             value: MenuAction.create,
-                            child: Text(
-                                AppLocalizations.of(context)!.menuActionCreate),
+                            child: Text(l10n.menuActionCreate),
                           ),
                           PopupMenuItem(
                             value: MenuAction.join,
-                            child: Text(
-                                AppLocalizations.of(context)!.menuActionJoin),
+                            child: Text(l10n.menuActionJoin),
                           ),
                           PopupMenuItem(
                             value: MenuAction.share,
-                            child: Text(
-                                AppLocalizations.of(context)!.menuActionShare),
+                            child: Text(l10n.menuActionShare),
                           ),
                         ],
                       ),
@@ -226,7 +257,7 @@ class _DailyScrollViewState extends State<DailyScrollView> {
                         titlePadding: const EdgeInsetsDirectional.only(
                             start: 16.0, bottom: 16.0),
                         title: Text(
-                          AppLocalizations.of(context)!.appTitle,
+                          l10n.appTitle,
                           style: const TextStyle(color: Colors.white),
                         ),
                         background: Stack(
@@ -265,13 +296,11 @@ class _DailyScrollViewState extends State<DailyScrollView> {
                             widthFactor: 1,
                             child: DayCard(
                               date: dates[index],
-                              lunchMeal: extractMealForDay(snapshot.data, dates[index], MealType.lunch),
-                              dinnerMeal: extractMealForDay(snapshot.data, dates[index], MealType.dinner),
-                              onMealUpdated: () {
-                                setState(() {
-                                  mealData = _mealService.fetchMeals();
-                                });
-                              },
+                              lunchMeal:
+                                  mealsByDay[(dates[index], MealType.lunch)],
+                              dinnerMeal:
+                                  mealsByDay[(dates[index], MealType.dinner)],
+                              onMealUpdated: _reloadMeals,
                             ),
                           ),
                         );

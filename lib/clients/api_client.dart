@@ -17,7 +17,8 @@ class ApiClient {
     if (response.statusCode != 200) {
       throw ApiException(response.statusCode, 'Failed to fetch menu id');
     }
-    return jsonDecode(response.body)['menuId'];
+    final body = jsonDecode(response.body) as Map<String, dynamic>;
+    return body['menuId'] as String;
   }
 
   Future<void> validateMenuId(String menuId) async {
@@ -64,6 +65,10 @@ class ApiClient {
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw ApiException(response.statusCode, 'Failed to update meal');
     }
+  }
+
+  void close() {
+    _httpClient.close();
   }
 }
 

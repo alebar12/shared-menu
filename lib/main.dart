@@ -8,10 +8,7 @@ import 'package:shared_menu/services/menu_service.dart';
 import 'package:shared_menu/services/storage_service.dart';
 import 'package:shared_menu/widgets/daily_scroll_view.dart';
 
-
-
 void main() {
-  //debugPaintSizeEnabled = true;
   initializeDateFormatting();
   runApp(const MyApp());
 }
@@ -23,8 +20,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => MyAppState()),
-        Provider(create: (context) => ApiClient()),
+        Provider(
+          create: (context) => ApiClient(),
+          dispose: (context, apiClient) => apiClient.close(),
+        ),
         Provider(create: (context) => StorageService()),
         Provider(
           create: (context) => MenuService(
@@ -40,7 +39,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+        onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         theme: ThemeData(
@@ -52,13 +51,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-
-class MyAppState extends ChangeNotifier {
-
-}
-
-
-
-
