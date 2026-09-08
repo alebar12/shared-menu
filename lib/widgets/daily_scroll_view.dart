@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_menu/constants/consts.dart';
@@ -61,8 +60,8 @@ class _DailyScrollViewState extends State<DailyScrollView>
 
   List<DateTime> _generateDates() {
     final now = DateTime.now();
-    return List<DateTime>.generate(Consts.days,
-        (index) => DateTime(now.year, now.month, now.day + index));
+    return List<DateTime>.generate(
+        Consts.days, (index) => DateTime(now.year, now.month, now.day + index));
   }
 
   Map<(DateTime, MealType), Meal> _indexMealsByDay(List<Meal> meals) {
@@ -250,9 +249,8 @@ class _DailyScrollViewState extends State<DailyScrollView>
                       ),
                     ],
                     flexibleSpace: Container(
-                      decoration: BoxDecoration(
-                          color: theme.colorScheme.primary
-                      ),
+                      decoration:
+                          BoxDecoration(color: theme.colorScheme.primary),
                       child: FlexibleSpaceBar(
                         titlePadding: const EdgeInsetsDirectional.only(
                             start: 16.0, bottom: 16.0),
@@ -270,18 +268,16 @@ class _DailyScrollViewState extends State<DailyScrollView>
                             ),
                             Positioned(
                                 child: Container(
-                                  decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.bottomCenter,
-                                        end: Alignment.topCenter,
-                                        colors: [
-                                          Colors.black,
-                                          Colors.transparent,
-                                        ],
-                                      )
-                                  ),
-                                )
-                            ),
+                              decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  Colors.black,
+                                  Colors.transparent,
+                                ],
+                              )),
+                            )),
                           ],
                         ),
                       ),
@@ -289,7 +285,7 @@ class _DailyScrollViewState extends State<DailyScrollView>
                   ),
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
+                      (BuildContext context, int index) {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Center(

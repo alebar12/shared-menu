@@ -53,7 +53,8 @@ void main() {
 
   group('updateMeal', () {
     test('posts the meal for the current menu', () async {
-      await mealService.updateMeal('Pizza', DateTime(2024, 1, 5), MealType.dinner);
+      await mealService.updateMeal(
+          'Pizza', DateTime(2024, 1, 5), MealType.dinner);
 
       final posted = apiClient.postedMeals.single;
       expect(posted.menuId, 'menu-1');

@@ -52,19 +52,22 @@ void main() {
 
   group('parseDay', () {
     test('parses a zero padded day', () {
-      final meal = Meal(day: '2024-01-15', mealType: MealType.lunch, meal: 'Pasta');
+      final meal =
+          Meal(day: '2024-01-15', mealType: MealType.lunch, meal: 'Pasta');
 
       expect(meal.parseDay(), DateTime(2024, 1, 15));
     });
 
     test('parses a non padded day', () {
-      final meal = Meal(day: '2024-1-5', mealType: MealType.lunch, meal: 'Pasta');
+      final meal =
+          Meal(day: '2024-1-5', mealType: MealType.lunch, meal: 'Pasta');
 
       expect(meal.parseDay(), DateTime(2024, 1, 5));
     });
 
     test('throws on an unparsable day', () {
-      final meal = Meal(day: 'not-a-date', mealType: MealType.lunch, meal: 'Pasta');
+      final meal =
+          Meal(day: 'not-a-date', mealType: MealType.lunch, meal: 'Pasta');
 
       expect(meal.parseDay, throwsFormatException);
     });
