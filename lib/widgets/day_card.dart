@@ -25,7 +25,7 @@ class DayCard extends StatelessWidget {
 
   Future<void> _displayTextInputDialog(BuildContext context, String defaultValue, DateTime refDate,
       MealType mealType, VoidCallback onMealUpdated) async {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final mealService = context.read<MealService>();
     var value = defaultValue;
     await showDialog(
@@ -84,7 +84,7 @@ class DayCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     Color? iconAndTextColor = theme.colorScheme.onPrimaryContainer;
     final textStyle = theme.textTheme.bodySmall!.copyWith(
       color: iconAndTextColor,

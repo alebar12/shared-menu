@@ -134,4 +134,27 @@ void main() {
       );
     });
   });
+
+  group('close', () {
+    test('closes the underlying http client', () {
+      final httpClient = _RecordingClient();
+      ApiClient(httpClient: httpClient).close();
+
+      expect(httpClient.closed, isTrue);
+    });
+  });
+}
+
+class _RecordingClient extends http.BaseClient {
+  bool closed = false;
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) async =>
+      http.StreamedResponse(const Stream<List<int>>.empty(), 200);
+
+  @override
+  void close() {
+    closed = true;
+    super.close();
+  }
 }

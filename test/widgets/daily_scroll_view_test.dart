@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -47,14 +49,18 @@ void main() {
     );
   }
 
-  Meal mealForToday(MealType mealType, String meal) {
+  Meal mealForDay(int dayOffset, MealType mealType, String meal) {
     final now = DateTime.now();
+    final day = DateTime(now.year, now.month, now.day + dayOffset);
     return Meal(
-      day: '${now.year}-${now.month}-${now.day}',
+      day: '${day.year}-${day.month}-${day.day}',
       mealType: mealType,
       meal: meal,
     );
   }
+
+  Meal mealForToday(MealType mealType, String meal) =>
+      mealForDay(0, mealType, meal);
 
   testWidgets('shows a progress indicator while the meals load', (tester) async {
     await pumpDailyScrollView(tester);
@@ -77,6 +83,66 @@ void main() {
     expect(find.byType(DayCard), findsWidgets);
     expect(find.text('Lunch: Pasta'), findsOneWidget);
     expect(find.text('Dinner: Pizza'), findsOneWidget);
+  });
+
+  testWidgets('assigns every meal to the card of its own day', (tester) async {
+    apiClient.mealsToReturn = <Meal>[
+      mealForToday(MealType.lunch, 'Pasta'),
+      mealForDay(1, MealType.dinner, 'Soup'),
+    ];
+
+    await pumpDailyScrollView(tester);
+    await tester.pumpAndSettle();
+
+    final today = DateTime.now();
+    final startOfToday = DateTime(today.year, today.month, today.day);
+    final cards = tester.widgetList<DayCard>(find.byType(DayCard));
+    final todayCard = cards.firstWhere((card) => card.date == startOfToday);
+    final tomorrowCard = cards.firstWhere(
+      (card) => card.date == startOfToday.add(const Duration(days: 1)),
+    );
+
+    expect(todayCard.lunchMeal?.meal, 'Pasta');
+    expect(todayCard.dinnerMeal, isNull);
+    expect(tomorrowCard.lunchMeal, isNull);
+    expect(tomorrowCard.dinnerMeal?.meal, 'Soup');
+  });
+
+  testWidgets('pull to refresh keeps the indicator until the reload completes',
+      (tester) async {
+    await pumpDailyScrollView(tester);
+    await tester.pumpAndSettle();
+
+    final gate = Completer<void>();
+    apiClient.fetchMealsGate = gate;
+
+    await tester.fling(find.byType(CustomScrollView), const Offset(0, 300), 1000);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(apiClient.fetchMealsMenuIds, <String>['menu-1', 'menu-1']);
+    expect(find.byType(RefreshProgressIndicator), findsOneWidget);
+
+    gate.complete();
+    await tester.pumpAndSettle();
+
+    expect(find.byType(RefreshProgressIndicator), findsNothing);
+  });
+
+  testWidgets('resuming on the same day does not reload the meals',
+      (tester) async {
+    await pumpDailyScrollView(tester);
+    await tester.pumpAndSettle();
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pumpAndSettle();
+
+    expect(apiClient.fetchMealsMenuIds, <String>['menu-1']);
   });
 
   testWidgets('shows an error and retries when loading fails', (tester) async {

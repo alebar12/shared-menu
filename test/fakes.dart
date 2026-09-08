@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:shared_menu/clients/api_client.dart';
 import 'package:shared_menu/dto/meal.dart';
 import 'package:shared_menu/services/storage_service.dart';
@@ -24,6 +26,9 @@ class FakeApiClient extends ApiClient {
   Object? fetchMealsError;
   Object? postMealError;
 
+  /// When set, [fetchMeals] only completes once this completer does.
+  Completer<void>? fetchMealsGate;
+
   int fetchMenuIdCalls = 0;
   final List<String> validatedMenuIds = <String>[];
   final List<String> fetchMealsMenuIds = <String>[];
@@ -49,6 +54,10 @@ class FakeApiClient extends ApiClient {
   @override
   Future<List<Meal>> fetchMeals(String menuId) async {
     fetchMealsMenuIds.add(menuId);
+    final gate = fetchMealsGate;
+    if (gate != null) {
+      await gate.future;
+    }
     if (fetchMealsError != null) {
       throw fetchMealsError!;
     }
