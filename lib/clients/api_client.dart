@@ -7,8 +7,12 @@ import 'package:shared_menu/constants/consts.dart';
 import 'package:shared_menu/dto/meal.dart';
 
 class ApiClient {
+  ApiClient({http.Client? httpClient}) : _httpClient = httpClient ?? http.Client();
+
+  final http.Client _httpClient;
+
   Future<String> fetchMenuId() async {
-    final response = await http
+    final response = await _httpClient
         .get(Uri.parse('${Consts.apiBaseUrl}/menuId'));
     if (response.statusCode != 200) {
       throw ApiException(response.statusCode, 'Failed to fetch menu id');
@@ -17,7 +21,7 @@ class ApiClient {
   }
 
   Future<void> validateMenuId(String menuId) async {
-    final response = await http.post(
+    final response = await _httpClient.post(
       Uri.parse('${Consts.apiBaseUrl}/menuId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -32,7 +36,7 @@ class ApiClient {
   }
 
   Future<List<Meal>> fetchMeals(String menuId) async {
-    final response = await http
+    final response = await _httpClient
         .get(Uri.parse('${Consts.apiBaseUrl}/meals'),
         headers: <String, String>{
           'x-menu-id': menuId,
@@ -45,7 +49,7 @@ class ApiClient {
   }
 
   Future<void> postMeal(String menuId, String meal, DateTime day, MealType mealType) async {
-    final response = await http.post(
+    final response = await _httpClient.post(
       Uri.parse('${Consts.apiBaseUrl}/meals'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',

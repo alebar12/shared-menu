@@ -27,54 +27,50 @@ class DayCard extends StatelessWidget {
       MealType mealType, VoidCallback onMealUpdated) async {
     final l10n = AppLocalizations.of(context)!;
     final mealService = context.read<MealService>();
-    final controller = TextEditingController(text: defaultValue);
-    try {
-      await showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: SizedBox(
-                width: 300,
-                child: TextField(
-                  onChanged: (value) {
-
-                  },
-                  controller: controller,
-                  autofocus: true,
-                  minLines: 1,
-                  maxLines: 5,
-                ),
+    var value = defaultValue;
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: SizedBox(
+              width: 300,
+              child: TextFormField(
+                initialValue: defaultValue,
+                onChanged: (newValue) {
+                  value = newValue;
+                },
+                autofocus: true,
+                minLines: 1,
+                maxLines: 5,
               ),
-              actions: <Widget>[
-                MaterialButton(
-                  child: Text(l10n.labelCancel),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                MaterialButton(
-                  child: Text(l10n.labelOk),
-                  onPressed: () {
-                    final navigator = Navigator.of(context);
-                    final messenger = ScaffoldMessenger.of(context);
-                    mealService
-                        .updateMeal(controller.text, refDate, mealType)
-                        .then((_) {
-                      navigator.pop();
-                      onMealUpdated();
-                    }).catchError((_) {
-                      messenger.showSnackBar(
-                        SnackBar(content: Text(l10n.errorUpdateFailed)),
-                      );
-                    });
-                  },
-                ),
-              ],
-            );
-          });
-    } finally {
-      controller.dispose();
-    }
+            ),
+            actions: <Widget>[
+              MaterialButton(
+                child: Text(l10n.labelCancel),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              MaterialButton(
+                child: Text(l10n.labelOk),
+                onPressed: () {
+                  final navigator = Navigator.of(context);
+                  final messenger = ScaffoldMessenger.of(context);
+                  mealService
+                      .updateMeal(value, refDate, mealType)
+                      .then((_) {
+                    navigator.pop();
+                    onMealUpdated();
+                  }).catchError((_) {
+                    messenger.showSnackBar(
+                      SnackBar(content: Text(l10n.errorUpdateFailed)),
+                    );
+                  });
+                },
+              ),
+            ],
+          );
+        });
   }
 
   Color? _getCartColor(ThemeData theme) {
