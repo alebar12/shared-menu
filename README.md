@@ -3,8 +3,12 @@
 </p>
 
 # Shared Menu
+[![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=fff)](#)
+[![Dart](https://img.shields.io/badge/Dart-%230175C2.svg?logo=dart&logoColor=white)](#)
+[![Android](https://img.shields.io/badge/Android-3DDC84?logo=android&logoColor=white)](#)
 
-Shared Menu is a Flutter app to plan lunches and dinners and share the plan with other people. Everyone who joins the same menu sees and edits the same meals.
+
+Shared Menu is a Flutter app to plan lunches and dinners and share the plan with other people. Everyone who joins the same menu sees and edits the same meals. The application backend is avilable [here](https://github.com/alebar12/shared-menu-backend).
 
 ## Features
 
