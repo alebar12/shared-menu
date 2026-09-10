@@ -1,8 +1,11 @@
 <p align="center">
-  <img src="images/icon.png" alt="Shared Menu" width="120">
+  <img src="screenshots/screenshot1.png" alt="Screenshot 1" width="200">
+  <img src="screenshots/screenshot2.png" alt="Screenshot 2" width="200">
+  <img src="screenshots/screenshot3.png" alt="Screenshot 3" width="200">
 </p>
 
 # Shared Menu
+
 [![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=fff)](#)
 [![Dart](https://img.shields.io/badge/Dart-%230175C2.svg?logo=dart&logoColor=white)](#)
 [![Android](https://img.shields.io/badge/Android-3DDC84?logo=android&logoColor=white)](#)
