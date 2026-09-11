@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_menu/clients/api_client.dart';
 import 'package:shared_menu/dto/meal.dart';
 import 'package:shared_menu/l10n/app_localizations.dart';
+import 'package:shared_menu/services/crypto_service.dart';
 import 'package:shared_menu/services/meal_service.dart';
 import 'package:shared_menu/services/menu_service.dart';
 import 'package:shared_menu/widgets/day_card.dart';
@@ -21,12 +22,15 @@ void main() {
 
   setUp(() {
     apiClient = FakeApiClient();
+    final cryptoService = CryptoService();
     mealService = MealService(
       apiClient: apiClient,
       menuService: MenuService(
         apiClient: apiClient,
         storageService: FakeStorageService(storedMenuId: 'menu-1'),
+        cryptoService: cryptoService,
       ),
+      cryptoService: cryptoService,
     );
   });
 
@@ -140,7 +144,7 @@ void main() {
 
     final posted = apiClient.postedMeals.single;
     expect(posted.menuId, 'menu-1');
-    expect(posted.meal, 'Lasagna');
+    expect(await decryptMealName(posted.meal), 'Lasagna');
     expect(posted.day, DateTime(2024, 1, 15));
     expect(posted.mealType, MealType.dinner);
     expect(notified, 1);

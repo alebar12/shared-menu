@@ -2,7 +2,43 @@ import 'dart:async';
 
 import 'package:shared_menu/clients/api_client.dart';
 import 'package:shared_menu/dto/meal.dart';
+import 'package:shared_menu/dto/menu_credentials.dart';
+import 'package:shared_menu/services/crypto_service.dart';
 import 'package:shared_menu/services/storage_service.dart';
+
+/// The secret the fakes store next to the menu id.
+const String fakeMenuSecret = 'fake-menu-secret';
+
+String fakeQrPayload({
+  String menuId = 'menu-1',
+  String secret = fakeMenuSecret,
+}) {
+  return MenuCredentials(menuId: menuId, secret: secret).toQrPayload();
+}
+
+/// Encrypts [name] the way the server stores it.
+Future<String> encryptMealName(String name,
+    {String secret = fakeMenuSecret}) async {
+  return CryptoService().encrypt(name, secret);
+}
+
+Future<String> decryptMealName(String cipherText,
+    {String secret = fakeMenuSecret}) async {
+  return CryptoService().decrypt(cipherText, secret);
+}
+
+Future<Meal> encryptedMeal({
+  required String day,
+  required MealType mealType,
+  required String meal,
+  String secret = fakeMenuSecret,
+}) async {
+  return Meal(
+    day: day,
+    mealType: mealType,
+    meal: await encryptMealName(meal, secret: secret),
+  );
+}
 
 class PostedMeal {
   PostedMeal(this.menuId, this.meal, this.day, this.mealType);
@@ -21,6 +57,10 @@ class FakeApiClient extends ApiClient {
 
   String menuIdToReturn;
   List<Meal> mealsToReturn;
+
+  /// Overrides [mealsToReturn] for the listed menu ids.
+  final Map<String, List<Meal>> mealsByMenuId = <String, List<Meal>>{};
+
   Object? fetchMenuIdError;
   Object? validateMenuIdError;
   Object? fetchMealsError;
@@ -61,7 +101,7 @@ class FakeApiClient extends ApiClient {
     if (fetchMealsError != null) {
       throw fetchMealsError!;
     }
-    return mealsToReturn;
+    return mealsByMenuId[menuId] ?? mealsToReturn;
   }
 
   @override
@@ -75,10 +115,14 @@ class FakeApiClient extends ApiClient {
 }
 
 class FakeStorageService extends StorageService {
-  FakeStorageService({this.storedMenuId});
+  FakeStorageService({this.storedMenuId, String? storedMenuSecret})
+      : storedMenuSecret =
+            storedMenuSecret ?? (storedMenuId == null ? null : fakeMenuSecret);
 
   String? storedMenuId;
+  String? storedMenuSecret;
   final List<String> savedMenuIds = <String>[];
+  final List<String> savedMenuSecrets = <String>[];
 
   @override
   Future<String?> getMenuId() async => storedMenuId;
@@ -87,5 +131,14 @@ class FakeStorageService extends StorageService {
   Future<void> saveMenuId(String menuId) async {
     savedMenuIds.add(menuId);
     storedMenuId = menuId;
+  }
+
+  @override
+  Future<String?> getMenuSecret() async => storedMenuSecret;
+
+  @override
+  Future<void> saveMenuSecret(String secret) async {
+    savedMenuSecrets.add(secret);
+    storedMenuSecret = secret;
   }
 }

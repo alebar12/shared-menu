@@ -1,48 +1,65 @@
 import 'package:shared_menu/clients/api_client.dart';
+import 'package:shared_menu/dto/menu_credentials.dart';
+import 'package:shared_menu/services/crypto_service.dart';
 import 'package:shared_menu/services/storage_service.dart';
 
 class MenuService {
   MenuService({
     required ApiClient apiClient,
     required StorageService storageService,
+    required CryptoService cryptoService,
   })  : _apiClient = apiClient,
-        _storageService = storageService;
+        _storageService = storageService,
+        _cryptoService = cryptoService;
 
   final ApiClient _apiClient;
   final StorageService _storageService;
+  final CryptoService _cryptoService;
 
-  Future<String>? _menuIdFuture;
+  Future<MenuCredentials>? _credentialsFuture;
 
-  Future<String> currentMenuId() async {
-    _menuIdFuture ??= _readOrCreateMenuId();
+  Future<MenuCredentials> currentCredentials() async {
+    _credentialsFuture ??= _readOrCreateCredentials();
     try {
-      return await _menuIdFuture!;
+      return await _credentialsFuture!;
     } catch (_) {
-      _menuIdFuture = null;
+      _credentialsFuture = null;
       rethrow;
     }
   }
 
-  Future<String> _readOrCreateMenuId() async {
-    final existing = await _storageService.getMenuId();
-    if (existing != null) {
-      return existing;
+  Future<String> currentMenuId() async {
+    return (await currentCredentials()).menuId;
+  }
+
+  Future<MenuCredentials> _readOrCreateCredentials() async {
+    final menuId = await _storageService.getMenuId();
+    final secret = await _storageService.getMenuSecret();
+    if (menuId != null && secret != null) {
+      return MenuCredentials(menuId: menuId, secret: secret);
     }
-    final menuId = await _apiClient.fetchMenuId();
-    await _storageService.saveMenuId(menuId);
-    return menuId;
+    return _createCredentials();
   }
 
-  Future<String> createNewMenu() async {
-    final menuId = await _apiClient.fetchMenuId();
-    await _storageService.saveMenuId(menuId);
-    _menuIdFuture = Future.value(menuId);
-    return menuId;
+  Future<MenuCredentials> createNewMenu() async {
+    final credentials = await _createCredentials();
+    _credentialsFuture = Future.value(credentials);
+    return credentials;
   }
 
-  Future<void> joinMenu(String menuId) async {
-    await _apiClient.validateMenuId(menuId);
+  Future<void> joinMenu(String qrPayload) async {
+    final credentials = MenuCredentials.fromQrPayload(qrPayload);
+    await _apiClient.validateMenuId(credentials.menuId);
+    await _storageService.saveMenuId(credentials.menuId);
+    await _storageService.saveMenuSecret(credentials.secret);
+    _credentialsFuture = Future.value(credentials);
+  }
+
+  Future<MenuCredentials> _createCredentials() async {
+    final menuId = await _apiClient.fetchMenuId();
+    final secret = _cryptoService.generateSecret();
     await _storageService.saveMenuId(menuId);
-    _menuIdFuture = Future.value(menuId);
+    await _storageService.saveMenuSecret(secret);
+    return MenuCredentials(menuId: menuId, secret: secret);
   }
 }

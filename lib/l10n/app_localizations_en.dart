@@ -64,4 +64,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorJoinMenuFailed => 'Failed to join the menu';
+
+  @override
+  String get errorMenuCorrupted =>
+      'This menu is corrupted, a new menu will be created';
 }

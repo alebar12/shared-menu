@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_menu/clients/api_client.dart';
 import 'package:shared_menu/dto/meal.dart';
 import 'package:shared_menu/l10n/app_localizations.dart';
+import 'package:shared_menu/services/crypto_service.dart';
 import 'package:shared_menu/services/meal_service.dart';
 import 'package:shared_menu/services/menu_service.dart';
 import 'package:shared_menu/widgets/daily_scroll_view.dart';
@@ -29,14 +30,22 @@ void main() {
   });
 
   Future<void> pumpDailyScrollView(WidgetTester tester) {
-    final menuService =
-        MenuService(apiClient: apiClient, storageService: storageService);
+    final cryptoService = CryptoService();
+    final menuService = MenuService(
+      apiClient: apiClient,
+      storageService: storageService,
+      cryptoService: cryptoService,
+    );
     return tester.pumpWidget(
       MultiProvider(
         providers: [
           Provider<MenuService>.value(value: menuService),
           Provider<MealService>.value(
-            value: MealService(apiClient: apiClient, menuService: menuService),
+            value: MealService(
+              apiClient: apiClient,
+              menuService: menuService,
+              cryptoService: cryptoService,
+            ),
           ),
         ],
         child: MaterialApp(
@@ -49,18 +58,21 @@ void main() {
     );
   }
 
-  Meal mealForDay(int dayOffset, MealType mealType, String meal) {
+  Future<Meal> mealForDay(int dayOffset, MealType mealType, String meal,
+      {String secret = fakeMenuSecret}) {
     final now = DateTime.now();
     final day = DateTime(now.year, now.month, now.day + dayOffset);
-    return Meal(
+    return encryptedMeal(
       day: '${day.year}-${day.month}-${day.day}',
       mealType: mealType,
       meal: meal,
+      secret: secret,
     );
   }
 
-  Meal mealForToday(MealType mealType, String meal) =>
-      mealForDay(0, mealType, meal);
+  Future<Meal> mealForToday(MealType mealType, String meal,
+          {String secret = fakeMenuSecret}) =>
+      mealForDay(0, mealType, meal, secret: secret);
 
   testWidgets('shows a progress indicator while the meals load',
       (tester) async {
@@ -73,8 +85,8 @@ void main() {
   testWidgets('renders a card per day with the meals of the current menu',
       (tester) async {
     apiClient.mealsToReturn = <Meal>[
-      mealForToday(MealType.lunch, 'Pasta'),
-      mealForToday(MealType.dinner, 'Pizza'),
+      await mealForToday(MealType.lunch, 'Pasta'),
+      await mealForToday(MealType.dinner, 'Pizza'),
     ];
 
     await pumpDailyScrollView(tester);
@@ -88,8 +100,8 @@ void main() {
 
   testWidgets('assigns every meal to the card of its own day', (tester) async {
     apiClient.mealsToReturn = <Meal>[
-      mealForToday(MealType.lunch, 'Pasta'),
-      mealForDay(1, MealType.dinner, 'Soup'),
+      await mealForToday(MealType.lunch, 'Pasta'),
+      await mealForDay(1, MealType.dinner, 'Soup'),
     ];
 
     await pumpDailyScrollView(tester);
@@ -159,6 +171,23 @@ void main() {
     await tester.tap(find.text('Retry'));
     await tester.pumpAndSettle();
 
+    expect(find.byType(DayCard), findsWidgets);
+  });
+
+  testWidgets('replaces the menu when none of its meals can be decrypted',
+      (tester) async {
+    apiClient.mealsByMenuId['menu-1'] = <Meal>[
+      await mealForToday(MealType.lunch, 'Pasta', secret: 'another-secret'),
+    ];
+    apiClient.mealsByMenuId['menu-2'] = const <Meal>[];
+
+    await pumpDailyScrollView(tester);
+    await tester.pumpAndSettle();
+
+    expect(find.text('This menu is corrupted, a new menu will be created'),
+        findsOneWidget);
+    expect(storageService.savedMenuIds, <String>['menu-2']);
+    expect(apiClient.fetchMealsMenuIds, <String>['menu-1', 'menu-2']);
     expect(find.byType(DayCard), findsWidgets);
   });
 

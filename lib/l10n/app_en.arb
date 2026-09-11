@@ -71,5 +71,9 @@
   "errorJoinMenuFailed": "Failed to join the menu",
   "@errorJoinMenuFailed": {
     "description": "Error message shown when joining a menu fails or the scanned menu id is invalid"
+  },
+  "errorMenuCorrupted": "This menu is corrupted, a new menu will be created",
+  "@errorMenuCorrupted": {
+    "description": "Message shown when none of the meals of the menu can be decrypted and the menu is replaced"
   }
 }

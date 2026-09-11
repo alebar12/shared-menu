@@ -205,6 +205,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to join the menu'**
   String get errorJoinMenuFailed;
+
+  /// Message shown when none of the meals of the menu can be decrypted and the menu is replaced
+  ///
+  /// In en, this message translates to:
+  /// **'This menu is corrupted, a new menu will be created'**
+  String get errorMenuCorrupted;
 }
 
 class _AppLocalizationsDelegate

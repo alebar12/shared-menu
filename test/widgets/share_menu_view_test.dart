@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_menu/clients/api_client.dart';
 import 'package:shared_menu/l10n/app_localizations.dart';
+import 'package:shared_menu/services/crypto_service.dart';
 import 'package:shared_menu/services/menu_service.dart';
 import 'package:shared_menu/widgets/share_menu_view.dart';
 
@@ -25,8 +26,11 @@ void main() {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Provider<MenuService>.value(
-          value:
-              MenuService(apiClient: apiClient, storageService: storageService),
+          value: MenuService(
+            apiClient: apiClient,
+            storageService: storageService,
+            cryptoService: CryptoService(),
+          ),
           child: const ShareMenuView(),
         ),
       ),
@@ -41,8 +45,10 @@ void main() {
     await tester.pumpAndSettle();
   });
 
-  testWidgets('renders the qr code of the current menu id', (tester) async {
+  testWidgets('renders the qr code of the current menu id and secret',
+      (tester) async {
     storageService.storedMenuId = 'menu-1';
+    storageService.storedMenuSecret = 'secret-1';
 
     await pumpShareMenuView(tester);
     await tester.pumpAndSettle();
@@ -70,5 +76,7 @@ void main() {
     expect(find.byType(QrImageView), findsOneWidget);
     expect(find.text('Failed to load menu id'), findsNothing);
     expect(storageService.savedMenuIds, <String>['menu-2']);
+    expect(storageService.savedMenuSecrets.single,
+        matches(r'^[A-Za-z0-9]{32}$'));
   });
 }

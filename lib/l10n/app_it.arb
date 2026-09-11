@@ -17,5 +17,6 @@
   "errorLoadingMenuId": "Impossibile caricare l'id del menu",
   "joinMenuConfirmMessage": "Se ti unisci a un altro menu, tutti i dati attuali andranno persi. Vuoi continuare?",
   "scanMenuInstruction": "Inquadra il codice QR del menu a cui vuoi unirti",
-  "errorJoinMenuFailed": "Impossibile unirsi al menu"
+  "errorJoinMenuFailed": "Impossibile unirsi al menu",
+  "errorMenuCorrupted": "Questo menu è corrotto, verrà creato un nuovo menu"
 }
