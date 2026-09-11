@@ -135,8 +135,8 @@ void main() {
       await menuService.createNewMenu();
 
       expect(await menuService.currentMenuId(), 'created-menu');
-      expect((await menuService.currentCredentials()).secret,
-          isNot('old-secret'));
+      expect(
+          (await menuService.currentCredentials()).secret, isNot('old-secret'));
     });
 
     test('does not store the menu id when the api fails', () async {
