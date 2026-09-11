@@ -59,6 +59,17 @@ void main() {
     expect(apiClient.fetchMenuIdCalls, 0);
   });
 
+  testWidgets('centers the qr code horizontally', (tester) async {
+    storageService.storedMenuId = 'menu-1';
+
+    await pumpShareMenuView(tester);
+    await tester.pumpAndSettle();
+
+    final qrCode = tester.getRect(find.byType(QrImageView));
+    final body = tester.getRect(find.byType(Scaffold));
+    expect(qrCode.center.dx, body.center.dx);
+  });
+
   testWidgets('shows an error and retries when loading fails', (tester) async {
     apiClient.fetchMenuIdError = ApiException(500, 'boom');
 
@@ -76,7 +87,7 @@ void main() {
     expect(find.byType(QrImageView), findsOneWidget);
     expect(find.text('Failed to load menu id'), findsNothing);
     expect(storageService.savedMenuIds, <String>['menu-2']);
-    expect(storageService.savedMenuSecrets.single,
-        matches(r'^[A-Za-z0-9]{32}$'));
+    expect(
+        storageService.savedMenuSecrets.single, matches(r'^[A-Za-z0-9]{32}$'));
   });
 }

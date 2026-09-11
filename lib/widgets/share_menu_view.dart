@@ -62,6 +62,7 @@ class _ShareMenuViewState extends State<ShareMenuView> {
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
                     l10n.shareMenuInstruction,
@@ -70,13 +71,15 @@ class _ShareMenuViewState extends State<ShareMenuView> {
                   ),
                   const SizedBox(height: 24),
                   Flexible(
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: QrImageView(
-                        data: snapshot.data!.toQrPayload(),
-                        version: QrVersions.auto,
-                        backgroundColor: Colors.white,
-                        padding: const EdgeInsets.all(16),
+                    child: Center(
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: QrImageView(
+                          data: snapshot.data!.toQrPayload(),
+                          version: QrVersions.auto,
+                          backgroundColor: Colors.white,
+                          padding: const EdgeInsets.all(16),
+                        ),
                       ),
                     ),
                   ),
