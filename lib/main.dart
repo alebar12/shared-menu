@@ -3,6 +3,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_menu/clients/api_client.dart';
 import 'package:shared_menu/l10n/app_localizations.dart';
+import 'package:shared_menu/services/crypto_service.dart';
 import 'package:shared_menu/services/meal_service.dart';
 import 'package:shared_menu/services/menu_service.dart';
 import 'package:shared_menu/services/storage_service.dart';
@@ -25,16 +26,19 @@ class MyApp extends StatelessWidget {
           dispose: (context, apiClient) => apiClient.close(),
         ),
         Provider(create: (context) => StorageService()),
+        Provider(create: (context) => CryptoService()),
         Provider(
           create: (context) => MenuService(
             apiClient: context.read<ApiClient>(),
             storageService: context.read<StorageService>(),
+            cryptoService: context.read<CryptoService>(),
           ),
         ),
         Provider(
           create: (context) => MealService(
             apiClient: context.read<ApiClient>(),
             menuService: context.read<MenuService>(),
+            cryptoService: context.read<CryptoService>(),
           ),
         ),
       ],

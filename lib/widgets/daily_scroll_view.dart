@@ -34,7 +34,7 @@ class _DailyScrollViewState extends State<DailyScrollView>
     _mealService = context.read<MealService>();
     _menuService = context.read<MenuService>();
     dates = _generateDates();
-    mealData = _mealService.fetchMeals();
+    mealData = _fetchMeals();
   }
 
   @override
@@ -54,7 +54,7 @@ class _DailyScrollViewState extends State<DailyScrollView>
     }
     setState(() {
       dates = refreshedDates;
-      mealData = _mealService.fetchMeals();
+      mealData = _fetchMeals();
     });
   }
 
@@ -74,8 +74,27 @@ class _DailyScrollViewState extends State<DailyScrollView>
 
   void _reloadMeals() {
     setState(() {
-      mealData = _mealService.fetchMeals();
+      mealData = _fetchMeals();
     });
+  }
+
+  Future<List<Meal>> _fetchMeals() async {
+    try {
+      return await _mealService.fetchMeals();
+    } on CorruptedMenuException {
+      return _replaceCorruptedMenu();
+    }
+  }
+
+  Future<List<Meal>> _replaceCorruptedMenu() async {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(AppLocalizations.of(context).errorMenuCorrupted)),
+      );
+    }
+    await _menuService.createNewMenu();
+    return _mealService.fetchMeals();
   }
 
   void _onMenuAction(MenuAction action) {
@@ -123,16 +142,16 @@ class _DailyScrollViewState extends State<DailyScrollView>
     if (confirmed != true || !mounted) {
       return;
     }
-    final scannedMenuId = await Navigator.push<String>(
+    final scannedPayload = await Navigator.push<String>(
       context,
       MaterialPageRoute(builder: (context) => const ScanMenuView()),
     );
-    if (scannedMenuId == null || !mounted) {
+    if (scannedPayload == null || !mounted) {
       return;
     }
     final messenger = ScaffoldMessenger.of(context);
     try {
-      await _menuService.joinMenu(scannedMenuId);
+      await _menuService.joinMenu(scannedPayload);
       if (!mounted) {
         return;
       }
@@ -211,15 +230,13 @@ class _DailyScrollViewState extends State<DailyScrollView>
             final mealsByDay = _indexMealsByDay(snapshot.data!);
             return RefreshIndicator(
               onRefresh: () async {
-                final refreshed = _mealService.fetchMeals();
+                final refreshed = _fetchMeals();
                 setState(() {
                   mealData = refreshed;
                 });
                 try {
                   await refreshed;
-                } catch (_) {
-                  // Surfaced by the FutureBuilder on the next build.
-                }
+                } catch (_) {}
               },
               child: CustomScrollView(
                 slivers: <Widget>[

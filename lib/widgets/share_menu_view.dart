@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:shared_menu/dto/menu_credentials.dart';
 import 'package:shared_menu/l10n/app_localizations.dart';
 import 'package:shared_menu/services/menu_service.dart';
 
@@ -15,13 +16,13 @@ class ShareMenuView extends StatefulWidget {
 
 class _ShareMenuViewState extends State<ShareMenuView> {
   late final MenuService _menuService;
-  late Future<String> menuId;
+  late Future<MenuCredentials> credentials;
 
   @override
   void initState() {
     super.initState();
     _menuService = context.read<MenuService>();
-    menuId = _menuService.currentMenuId();
+    credentials = _menuService.currentCredentials();
   }
 
   @override
@@ -33,8 +34,8 @@ class _ShareMenuViewState extends State<ShareMenuView> {
       appBar: AppBar(
         title: Text(l10n.menuActionShare),
       ),
-      body: FutureBuilder<String>(
-        future: menuId,
+      body: FutureBuilder<MenuCredentials>(
+        future: credentials,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(
@@ -46,7 +47,7 @@ class _ShareMenuViewState extends State<ShareMenuView> {
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        menuId = _menuService.currentMenuId();
+                        credentials = _menuService.currentCredentials();
                       });
                     },
                     child: Text(l10n.labelRetry),
@@ -72,7 +73,7 @@ class _ShareMenuViewState extends State<ShareMenuView> {
                     child: AspectRatio(
                       aspectRatio: 1,
                       child: QrImageView(
-                        data: snapshot.data!,
+                        data: snapshot.data!.toQrPayload(),
                         version: QrVersions.auto,
                         backgroundColor: Colors.white,
                         padding: const EdgeInsets.all(16),
