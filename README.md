@@ -1,7 +1,7 @@
 <p align="center">
-  <img src="screenshots/screenshot1.png" alt="Screenshot 1" width="200">
-  <img src="screenshots/screenshot2.png" alt="Screenshot 2" width="200">
-  <img src="screenshots/screenshot3.png" alt="Screenshot 3" width="200">
+  <img src="meta/screenshot1.png" alt="Screenshot 1" width="200">
+  <img src="meta/screenshot2.png" alt="Screenshot 2" width="200">
+  <img src="meta/screenshot3.png" alt="Screenshot 3" width="200">
 </p>
 
 # Shared Menu
@@ -9,7 +9,13 @@
 [![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=fff)](#)
 [![Dart](https://img.shields.io/badge/Dart-%230175C2.svg?logo=dart&logoColor=white)](#)
 [![Android](https://img.shields.io/badge/Android-3DDC84?logo=android&logoColor=white)](#)
+[![Latest release](https://img.shields.io/github/v/release/alebar12/shared-menu?logo=github)](https://github.com/alebar12/shared-menu/releases/latest)
 
+<p align="center">
+  <a href="https://github.com/alebar12/shared-menu/releases/latest">
+    <img src="meta/get-it-on-github.png" alt="Get it on GitHub" height="80">
+  </a>
+</p>
 
 Shared Menu is a Flutter app to plan lunches and dinners and share the plan with other people. Everyone who joins the same menu sees and edits the same meals. The application backend is available [here](https://github.com/alebar12/shared-menu-backend).
 
